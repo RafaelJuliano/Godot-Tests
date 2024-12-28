@@ -1,10 +1,12 @@
-[gd_scene load_steps=15 format=4 uid="uid://d23uh3go5gu11"]
+[gd_scene load_steps=17 format=4 uid="uid://d23uh3go5gu11"]
 
+[ext_resource type="Script" path="res://scenes/game_manager.gd" id="1_nua1y"]
 [ext_resource type="PackedScene" uid="uid://cldkybmypmf5f" path="res://scenes/player.tscn" id="1_s645u"]
 [ext_resource type="Texture2D" uid="uid://388puv7xbtjr" path="res://assets/sprites/world_tileset.png" id="2_6re76"]
 [ext_resource type="PackedScene" uid="uid://cl3myi782kyxt" path="res://scenes/slime.tscn" id="2_70xf8"]
 [ext_resource type="PackedScene" uid="uid://fnef06krso7e" path="res://scenes/grass_plataform.tscn" id="3_6lxrh"]
 [ext_resource type="PackedScene" uid="uid://c16cbrme6mpku" path="res://scenes/coin.tscn" id="4_hjy6f"]
+[ext_resource type="FontFile" uid="uid://di2jamx0g3jiv" path="res://assets/fonts/PixelOperator8.ttf" id="5_0pphk"]
 [ext_resource type="PackedScene" uid="uid://djael0lf5xae" path="res://scenes/killzone.tscn" id="5_1t4q7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tglte"]
@@ -258,6 +260,20 @@ _data = {
 }
 
 [node name="Game" type="Node2D"]
+
+[node name="GameManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_nua1y")
+
+[node name="ScoreLabel" type="Label" parent="GameManager"]
+clip_children = 2
+offset_left = 357.0
+offset_top = -31.0
+offset_right = 425.0
+offset_bottom = -18.0
+theme_override_fonts/font = ExtResource("5_0pphk")
+theme_override_font_sizes/font_size = 8
+text = "Coins: 10"
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_10ypf")

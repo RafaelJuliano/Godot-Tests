@@ -16,7 +16,6 @@ func handle_gravity(delta: float) -> void:
 
 func handle_jump() -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		animated_sprite.play("jump")
 		velocity.y = JUMP_VELOCITY
 		
 
@@ -37,6 +36,6 @@ func set_is_idle() -> void:
 
 func set_is_running(direction: float) -> void:
 	if is_on_floor():
-		animated_sprite.flip_h = direction < 0
 		animated_sprite.play("run")
+	animated_sprite.flip_h = direction < 0
 	velocity.x = direction * SPEED
