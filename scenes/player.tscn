@@ -1,7 +1,25 @@
-[gd_scene load_steps=25 format=3 uid="uid://cldkybmypmf5f"]
+[gd_scene load_steps=31 format=3 uid="uid://cldkybmypmf5f"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ltb2s"]
 [ext_resource type="Texture2D" uid="uid://dt864cug6knjv" path="res://assets/sprites/knight.png" id="1_rbsnv"]
+[ext_resource type="AudioStream" uid="uid://7ryrailfd3vl" path="res://assets/sounds/jump.wav" id="3_fm6i0"]
+[ext_resource type="AudioStream" uid="uid://dkyndyepxub51" path="res://assets/sounds/hurt.wav" id="4_0co17"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vr3x8"]
+atlas = ExtResource("1_rbsnv")
+region = Rect2(0, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bxjgx"]
+atlas = ExtResource("1_rbsnv")
+region = Rect2(32, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_546jr"]
+atlas = ExtResource("1_rbsnv")
+region = Rect2(64, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7s47"]
+atlas = ExtResource("1_rbsnv")
+region = Rect2(96, 224, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b8xly"]
 atlas = ExtResource("1_rbsnv")
@@ -87,6 +105,23 @@ region = Rect2(224, 96, 32, 32)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_vr3x8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bxjgx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_546jr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h7s47")
+}],
+"loop": true,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_b8xly")
 }, {
 "duration": 1.0,
@@ -156,8 +191,8 @@ animations = [{
 "speed": 11.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_il48r"]
-radius = 5.09902
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cm04l"]
+size = Vector2(11, 14)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_ltb2s")
@@ -165,10 +200,16 @@ script = ExtResource("1_ltb2s")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_dss6w")
-animation = &"run"
+animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.476538
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -5)
-shape = SubResource("CircleShape2D_il48r")
+position = Vector2(-0.5, -7)
+shape = SubResource("RectangleShape2D_cm04l")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_fm6i0")
+bus = &"SFX"
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_0co17")
