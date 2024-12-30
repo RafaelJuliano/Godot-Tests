@@ -12,7 +12,7 @@
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tglte"]
 texture = ExtResource("2_6re76")
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-9.125, -8, 9.25, -8.25, 8, 8, -8, 8)
 1:0/0 = 0
 1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 3:0/0 = 0
@@ -273,7 +273,7 @@ offset_right = 425.0
 offset_bottom = -18.0
 theme_override_fonts/font = ExtResource("5_0pphk")
 theme_override_font_sizes/font_size = 8
-text = "Coins: 0"
+text = "Coins: 10"
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_10ypf")
@@ -292,7 +292,7 @@ tile_set = SubResource("TileSet_adlh3")
 
 [node name="Player" parent="." instance=ExtResource("1_s645u")]
 z_index = 100
-position = Vector2(361, 17)
+position = Vector2(666, -1)
 collision_layer = 2
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
@@ -339,3 +339,5 @@ autoplay = "SideMove"
 [node name="Slime" parent="." instance=ExtResource("2_70xf8")]
 z_index = 50
 position = Vector2(279, 20)
+
+[connection signal="tree_entered" from="Player" to="Player" method="_on_tree_entered"]

@@ -1,14 +1,11 @@
-[gd_scene load_steps=37 format=3 uid="uid://cldkybmypmf5f"]
+[gd_scene load_steps=34 format=3 uid="uid://cldkybmypmf5f"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ltb2s"]
 [ext_resource type="Texture2D" uid="uid://dt864cug6knjv" path="res://assets/sprites/knight.png" id="1_rbsnv"]
 [ext_resource type="AudioStream" uid="uid://7ryrailfd3vl" path="res://assets/sounds/jump.wav" id="3_fm6i0"]
 [ext_resource type="AudioStream" uid="uid://dkyndyepxub51" path="res://assets/sounds/hurt.wav" id="4_0co17"]
 [ext_resource type="Script" path="res://scripts/states/state_machine.gd" id="5_dy25p"]
-[ext_resource type="Script" path="res://scripts/states/player/player_idle.gd" id="6_gkaex"]
-[ext_resource type="Script" path="res://scripts/states/player/player_jumping.gd" id="7_88nni"]
 [ext_resource type="Script" path="res://scripts/states/player/player_running.gd" id="7_uag3c"]
-[ext_resource type="Script" path="res://scripts/states/player/player_falling.gd" id="8_sveig"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vr3x8"]
 atlas = ExtResource("1_rbsnv")
@@ -41,10 +38,6 @@ region = Rect2(64, 0, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_3wvth"]
 atlas = ExtResource("1_rbsnv")
 region = Rect2(96, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oun16"]
-atlas = ExtResource("1_rbsnv")
-region = Rect2(0, 64, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hp3fn"]
 atlas = ExtResource("1_rbsnv")
@@ -148,14 +141,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_oun16")
-}],
-"loop": true,
-"name": &"jump",
-"speed": 11.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_hp3fn")
 }, {
 "duration": 1.0,
@@ -208,9 +193,27 @@ animations = [{
 "speed": 11.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a5is7"]
-radius = 6.0
-height = 14.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cm04l"]
+size = Vector2(11, 14)
+
+[sub_resource type="GDScript" id="GDScript_43ykp"]
+script/source = "extends PlayerState
+class_name PlayerIdle
+
+func enter() -> void:
+	player.velocity.x = move_toward(player.velocity.x, 0, player.SPEED)
+	player.animated_sprite.play(\"idle\")
+	
+func _physics_process(delta: float) -> void:
+	player.move_and_slide()
+
+	#if not player.is_on_floor():
+		#transitioned.emit(self, FALLING)
+	#if player.jumping_input:
+		#transitioned.emit(self, JUMPING)
+	if Input.get_axis(\"move_left\", \"move_right\"):
+		transitioned.emit(self, RUNNING)
+"
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_ltb2s")
@@ -218,35 +221,25 @@ script = ExtResource("1_ltb2s")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_dss6w")
-animation = &"jump"
-frame_progress = 0.170172
+animation = &"dead"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -7)
-shape = SubResource("CapsuleShape2D_a5is7")
-debug_color = Color(0, 0.627451, 0.505882, 0.713726)
+position = Vector2(-0.5, -7)
+shape = SubResource("RectangleShape2D_cm04l")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_fm6i0")
+bus = &"SFX"
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_0co17")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("5_dy25p")
 initial_state = NodePath("PlayerIdle")
 
 [node name="PlayerIdle" type="Node" parent="StateMachine"]
-script = ExtResource("6_gkaex")
+script = SubResource("GDScript_43ykp")
 
 [node name="PlayerRunning" type="Node" parent="StateMachine"]
 script = ExtResource("7_uag3c")
-
-[node name="PlayerFalling" type="Node" parent="StateMachine"]
-script = ExtResource("8_sveig")
-
-[node name="PlayerJumping" type="Node" parent="StateMachine"]
-script = ExtResource("7_88nni")
-
-[node name="Sounds" type="Node" parent="."]
-
-[node name="JumpSound" type="AudioStreamPlayer2D" parent="Sounds"]
-stream = ExtResource("3_fm6i0")
-bus = &"SFX"
-
-[node name="DeathSound" type="AudioStreamPlayer2D" parent="Sounds"]
-stream = ExtResource("4_0co17")
